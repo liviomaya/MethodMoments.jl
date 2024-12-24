@@ -78,7 +78,6 @@ end
         @test abs(oo.params[1]) < 0.05
     end
 
-
     @testset "Solution precision II" begin
 
         # before optimization

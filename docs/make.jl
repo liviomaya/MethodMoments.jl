@@ -7,10 +7,10 @@ makedocs(
     format=Documenter.HTML(),
     pages=[
         "Home" => "index.md",
-        # "General GMM Models" => "general_gmm.md",
-        # "Linear Regressions" => "linear_regressions.md",
+        "General GMM models" => "general_gmm.md",
+        # "Linear regressions" => "linear_regressions.md",
         "API" => "api.md",
-        # "References" => "references.md"
+        "References" => "references.md"
     ],
     authors="Livio Maya",
     clean=true,

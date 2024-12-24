@@ -190,13 +190,13 @@ Returns a new `GMM` object, updating the estimate of the long-run covariance mat
 vcov(o::GMM; lags::Int64=0) = GMM(o.func, o.params, o.weight, hac_cov(sample(o), lags), o.twostep)
 
 function finite_differences(g, x)
-    step = 1e-8
+    step = 1e-8 / 2
     M, P = length(g(x)), length(x)
     ∂g = zeros(M, P)
     for p = 1:P
         dx = zeros(P)
-        dx[p] = step / 2
-        ∂g[:, p] .= (g(x .+ dx) .- g(x .- dx)) ./ step
+        dx[p] = step
+        ∂g[:, p] .= (g(x .+ dx) .- g(x .- dx)) ./ (2 * step)
     end
     return ∂g
 end
