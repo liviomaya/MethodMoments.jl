@@ -9,7 +9,7 @@ makedocs(
         "Home" => "index.md",
         # "General GMM Models" => "general_gmm.md",
         # "Linear Regressions" => "linear_regressions.md",
-        # "API" => "api.md",
+        "API" => "api.md",
         # "References" => "references.md"
     ],
     authors="Livio Maya",
