@@ -103,8 +103,8 @@ end
         @test o.npar == 2
         @test o.nmom == 3
         @test o.nobs == 1000000
-        pcov = par_cov(oo)
-        mcov = mom_cov(oo)
+        pcov = cov(oo)
+        mcov = momcov(oo)
         D = jacobian(oo)
         o = vcov(o, lags=4)
         @test size(mcov, 1) == size(mcov, 2)

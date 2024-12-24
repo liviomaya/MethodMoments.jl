@@ -212,11 +212,11 @@ function jacobian(o::GMM)
 end
 
 """
-    par_cov(a::GMM)
+    cov(a::GMM)
 
 Compute the covariance matrix of optimized parameter vector `θ`. See documentation of type `GMM` for notation. 
 """
-function par_cov(o::GMM)
+function cov(o::GMM)
     D = jacobian(o)
     W = o.weight
     S = o.longcov
@@ -226,11 +226,11 @@ function par_cov(o::GMM)
 end
 
 """
-    mom_cov(a::GMM)
+    momcov(a::GMM)
 
 Compute the (singular) covariance matrix of minimized moments `g(θ)`. See documentation of type `GMM` for notation. 
 """
-function mom_cov(o::GMM)
+function momcov(o::GMM)
     D = jacobian(o)
     W = o.weight
     S = o.longcov
@@ -240,27 +240,27 @@ function mom_cov(o::GMM)
 end
 
 """
-    par_var(a::GMM)
+    var(a::GMM)
 
 Compute the (element-by-element) variance of optimized parameter vector `θ`. See documentation of type `GMM` for notation. 
 """
-par_var(o::GMM) = diag(par_cov(o))
+var(o::GMM) = diag(cov(o))
 
 """
-    par_var(a::GMM)
+    std(a::GMM)
 
 Compute the (element-by-element) standard deviation of optimized parameter vector `θ`. See documentation of type `GMM` for notation. 
 """
-par_std(o::GMM) = sqrt.(par_var(o))
+std(o::GMM) = sqrt.(var(o))
 
 """
-    par_cor(a::GMM)
+    cor(a::GMM)
 
 Compute the correlation matrix of optimized parameter vector `θ`. See documentation of type `GMM` for notation. 
 """
-function par_cor(o::GMM)
-    COV = par_cov(o)
-    STD = par_std(o)
+function cor(o::GMM)
+    COV = cov(o)
+    STD = std(o)
     return COV ./ (STD * STD')
 end
 
@@ -284,7 +284,7 @@ function summary(o::GMM)
         "variable" => ["Parameter $p" for p in 1:o.npar],
         "par" => o.params
     )
-    tab.std = par_std(o)
+    tab.std = std(o)
     tab.t = tab.par ./ tab.std
     tab.pval = 2 .* (1 .- cdf.(Normal(), abs.(tab.t)))
     tab.stars = stars.(tab.pval)
@@ -311,7 +311,7 @@ function summary(o::GMM)
     end
 
     # Compute Wald on joint significance
-    pcov = par_cov(o)
+    pcov = cov(o)
     if abs(det(pcov)) > 1e-12
         wald = o.params' * inv(pcov) * o.params
         pval_wald = 1 .- cdf(Chisq(o.npar), wald)
@@ -376,7 +376,7 @@ function wald(o::GMM; R=nothing, r=nothing, subset=nothing)
     nrest = size(R, 1)
 
     E = (RR * o.params[subset] .- rr)
-    COV = RR * par_cov(o)[subset, subset] * RR'
+    COV = RR * cov(o)[subset, subset] * RR'
     wald = E' * inv(COV) * E
     pval_wald = 1 .- cdf(Chisq(nrest), wald)
 

@@ -31,11 +31,11 @@ vcov
 jacobian
 optimize
 reoptimize
-par_cov
-par_var
-par_std
-par_cor
-mom_cov
+cov
+var
+std
+cor
+momcov
 summary
 wald
 ```

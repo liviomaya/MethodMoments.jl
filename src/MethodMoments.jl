@@ -3,13 +3,14 @@ module MethodMoments
 import Base: summary
 import Distributions: sample
 import Optim: optimize
+import Statistics: cov, cor, var, std
 
 export GMM, gmm
 export sample, moments
 export vcov, jacobian
 export optimize, reoptimize
-export par_cov, par_var, par_std, par_cor
-export mom_cov
+export cov, var, std, cor
+export momcov
 export summary, wald
 
 include("dependencies.jl")
