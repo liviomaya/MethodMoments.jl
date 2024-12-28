@@ -62,6 +62,7 @@ function gmm(f::Function, θ::AbstractVector)
     return gmm(f, params, W)
 end
 
+# TODO: check nmom >= npar
 function check_and_promote(f, θ)
 
     # Check θ
@@ -335,7 +336,7 @@ end
 """
     wald(a::GMM; R=I, r=0, subset)
 
-Print result of the Wald test of the null `R θ[subset] = r`
+Print result of the Wald test of the null `R θ[subset] = r`. If omitted, `subset` defaults to all parameters, `1:a.npar`. `R` default to the identity, and `r` defaults to a vector of zeros.
 """
 function wald(o::GMM; R=nothing, r=nothing, subset=nothing)
 
