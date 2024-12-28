@@ -62,7 +62,6 @@ function gmm(f::Function, θ::AbstractVector)
     return gmm(f, params, W)
 end
 
-# TODO: check nmom >= npar
 function check_and_promote(f, θ)
 
     # Check θ
@@ -77,6 +76,7 @@ function check_and_promote(f, θ)
 
     sample = promote_to_matrix(sample)
     nobs, nmom = size(sample)
+    npar = length(params)
 
     if nmom == 0
         throw(ArgumentError("Moment function returns array with zero columns (moments)."))
@@ -84,6 +84,10 @@ function check_and_promote(f, θ)
 
     if nobs == 0
         throw(ArgumentError("Moment function returns array with zero rows (observations)."))
+    end
+
+    if nmom < npar
+        throw(ArgumentError("Model underidentified: $nmom moments for $npar parameters."))
     end
 
     return sample, params

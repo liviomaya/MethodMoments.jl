@@ -42,6 +42,7 @@ end
         @test_throws ArgumentError gmm(f, par0, zeros(2, 3))
         @test_throws ArgumentError gmm(f, par0, zeros(3, 3))
         @test_throws ArgumentError gmm(f, par0, [1.0 0.0; 0.0 0.0])
+        @test_throws ArgumentError gmm(f, zeros(3), [1.0 0.0; 0.0 0.0])
 
         # vcov
         o = gamma_example(nobs=10)
