@@ -139,8 +139,11 @@ function gmm_over(Y, X, Z, W)
     return gmm(f, β)
 end
 
+"""
+    coef(R::Regression)
 
-
+Return coefficient vector `β`, excluding intercept. To get intercept, use `intercept`. See documentation of type `Regression` for notation.
+"""
 function coef(o::Regression)
     if o.intercept
         return o.G.params[2:end]
@@ -149,6 +152,11 @@ function coef(o::Regression)
     end
 end
 
+"""
+    intercept(R::Regression)
+
+Return intercept term.
+"""
 function intercept(o::Regression)
     if o.intercept
         return o.G.params[1]
@@ -157,11 +165,18 @@ function intercept(o::Regression)
     end
 end
 
+"""
+    vcov(R::Regresion; lags=0)
+
+Returns a new `Regression` object, updating the estimate of the long-run covariance matrix. The new estimate is the heteroskedasticity and autocorrelation consistent (HAC) Newey-West estimator with specified `lags`. When `lag = 0`, the Newey-West reduces to the Huber-White estimator. 
+"""
 vcov(o::Regression; lags::Int64=0) = Regression(vcov(o.G; lags=lags), o.Y, o.X, o.Z, o.W, o.intercept)
 
 
 """
-Return asymptotic covariance matrix of coefficients (excludes intercept). Use `cov(o.G)` to include intercept.
+    cov(R::Regression)
+
+Compute the covariance matrix of linear coefficients `β`, excluding the intercept term. Run `cov(o.G)` to include intercept. See documentation of type `Regression` for notation. 
 """
 function cov(o::Regression)
     if o.intercept
@@ -171,14 +186,37 @@ function cov(o::Regression)
     end
 end
 
+"""
+    var(R::Regression)
+
+Compute the (element-by-element) variance of linear coefficients `β`, excluding the intercept term. See documentation of type `Regression` for notation. 
+"""
 var(o::Regression) = diag(cov(o))
+
+"""
+    var(R::Regression)
+
+Compute the (element-by-element) standard deviation of linear coefficients `β`, excluding the intercept term. See documentation of type `Regression` for notation. 
+"""
 std(o::Regression) = sqrt.(var(o))
+
+"""
+    cov(R::Regression)
+
+Compute the correlation matrix of linear coefficients `β`, excluding the intercept term. See documentation of type `Regression` for notation. 
+"""
 function cor(o::Regression)
     COV = cov(o)
     STD = std(o)
     return COV ./ (STD * STD')
 end
 
+"""
+    fit(R::Regression, X::VecOrMat)
+    fit(R::Regression)
+
+Compute fit `X β`. See documentation of type `Regression` for notation. If `X` is not provided, use regressors stored in `R` (used for estimation).
+"""
 function fit(o::Regression, X::AbstractVecOrMat)
     XX = MethodMoments.promote_to_matrix(X)
     @assert size(XX, 2) == (o.nrhs - o.intercept) "Number of X columns ($(size(XX, 2))) inconsistent with number of rhs variables in the regression ($(o.nrhs - o.intercept))"
@@ -193,15 +231,38 @@ function fit(o::Regression)
     end
 end
 
+"""
+    er(R::Regression, Y::Vector, X::VecOrMat)
+    er(R::Regression)
+
+Compute sample errors `Y - X β`. See documentation of type `Regression` for notation. If `X` and `Y` are not provided, use those stored in `R` (used for estimation).
+"""
 function er(o::Regression, Y::AbstractVector, X::AbstractVecOrMat)
     YY = Vector{Float64}(Y)
     return YY .- fit(o, X)
 end
 er(o::Regression) = o.Y .- fit(o)
 sse(o::Regression) = sum(er(o) .^ 2)
+
+"""
+    er_var(R::Regression)
+
+Return the estimated variance of the error term. No adjustment for degrees of freedom lost.
+"""
 er_var(o::Regression) = sse(o) / o.nobs
+
+"""
+    er_std(R::Regression)
+
+Return the estimated standard deviation of the error term. No adjustment for degrees of freedom lost.
+"""
 er_std(o::Regression) = sqrt(er_var(o))
 
+"""
+    r2(R::Regression; adjust::Bool=false)
+
+Return the coefficient of determination `R²`, adjusted or not for model complexity.
+"""
 function r2(o::Regression; adjust::Bool=false)
     r = 1 - sse(o) / sum((o.Y .- mean(o.Y)) .^ 2)
     if adjust
@@ -218,21 +279,41 @@ function gaussian_loglikelihood(x::Vector{Float64}, sigma::Float64)
     return logL
 end
 
+"""
+    llh(R::Regression)
+
+Return the log-likelihood of the estimated model.
+"""
 function llh(o::Regression)
     E = er(o)
     return gaussian_loglikelihood(E, er_std(o))
 end
 
+"""
+    aic(R::Regression)
+
+Return the Akaike Information Criterion.
+"""
 function aic(o::Regression)
     npar = o.G.npar + 1 # add sigma
     return 2 * npar - 2 * llh(o)
 end
 
+"""
+    bic(R::Regression)
+
+Return the Bayesian Information Criterion.
+"""
 function bic(o::Regression)
     npar = o.G.npar + 1 # add sigma
     return log(o.nobs) * npar - 2 * llh(o)
 end
 
+"""
+    summary(R::Regression)
+
+Print summary of the linear regression.
+"""
 function summary(o::Regression)
 
     compute_pval(tstat, N) = 2 .* (1 .- cdf.(TDist(N), abs.(tstat)))
@@ -280,6 +361,13 @@ function summary(o::Regression)
     return
 end
 
+"""
+    wald(R::Regression; R=I, r=0, subset)
+
+Print result of the Wald test of the null `R β[subset] = r`, where `β` excludes the intercept. See documentation of type `Regression` for notation.
+
+If omitted, `subset` defaults to all parameters (excluding the intercept). `R` defaults to the identity, and `r` defaults to a vector of zeros.
+"""
 function wald(o::Regression, R=nothing, r=nothing, subset=nothing)
     nrhs = o.nrhs - o.intercept
 

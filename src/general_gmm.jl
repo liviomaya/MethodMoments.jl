@@ -144,14 +144,14 @@ function hac_cov(X, lags)
 end
 
 """
-    sample(a::GMM)
+    sample(G::GMM)
 
 Compute sample of moments `f(θ)` (dim 1: observations, dim 2: moments). See documentation of type `GMM` for notation.  
 """
 sample(o::GMM) = promote_to_matrix(o.func(o.params))
 
 """
-    moments(a::GMM)
+    moments(G::GMM)
 
 Compute vector of empirical moments `g(θ)`, which is the sample average of `f(θ)`. See documentation of type `GMM` for notation.  
 """
@@ -168,7 +168,7 @@ function solve_minimization(f, θ, W, longcov, twostep; kwargs...)
 end
 
 """
-    optimize(a::GMM; <kwargs>)
+    optimize(G::GMM; <kwargs>)
 
 Solve the minimization problem `Min g(θ)' W g(θ)`. See documentation of type `GMM` for notation. 
 
@@ -181,7 +181,7 @@ To solve the minimization problem again using the feasible efficient weighting m
 optimize(o::GMM; kwargs...) = solve_minimization(o.func, o.params, o.weight, o.longcov, false; kwargs...)
 
 """
-    reoptimize(a::GMM; <kwargs>)
+    reoptimize(G::GMM; <kwargs>)
 
 Solve the minimization problem `Min g(θ)' S⁻¹ g(θ)`, where `S` is the estimated long-run covariance matrix stored in `a`. See documentation of type `GMM` for notation. 
 
@@ -192,7 +192,7 @@ The optimization uses the `optimize` function from the `Optim` package, passing 
 reoptimize(o::GMM; kwargs...) = solve_minimization(o.func, o.params, inv(o.longcov), o.longcov, true; kwargs...)
 
 """
-    vcov(a::GMM; lags=0)
+    vcov(G::GMM; lags=0)
 
 Returns a new `GMM` object, updating the estimate of the long-run covariance matrix. The new estimate is the heteroskedasticity and autocorrelation consistent (HAC) Newey-West estimator with specified `lags`. When `lag = 0`, the Newey-West reduces to the Huber-White estimator. 
 """
@@ -211,7 +211,7 @@ function finite_differences(g, x)
 end
 
 """
-    jacobian(o::GMM)
+    jacobian(G::GMM)
 
 Compute the jacobian matrix `∂g(θ)/∂θ` by finite differences (dim 1: moments, dim 2: paramaters). See documentation of type `GMM` for notation.
 """
@@ -221,7 +221,7 @@ function jacobian(o::GMM)
 end
 
 """
-    cov(a::GMM)
+    cov(G::GMM)
 
 Compute the covariance matrix of optimized parameter vector `θ`. See documentation of type `GMM` for notation. 
 """
@@ -235,7 +235,7 @@ function cov(o::GMM)
 end
 
 """
-    momcov(a::GMM)
+    momcov(G::GMM)
 
 Compute the (singular) covariance matrix of minimized moments `g(θ)`. See documentation of type `GMM` for notation. 
 """
@@ -249,21 +249,21 @@ function momcov(o::GMM)
 end
 
 """
-    var(a::GMM)
+    var(G::GMM)
 
 Compute the (element-by-element) variance of optimized parameter vector `θ`. See documentation of type `GMM` for notation. 
 """
 var(o::GMM) = diag(cov(o))
 
 """
-    std(a::GMM)
+    std(G::GMM)
 
 Compute the (element-by-element) standard deviation of optimized parameter vector `θ`. See documentation of type `GMM` for notation. 
 """
 std(o::GMM) = sqrt.(var(o))
 
 """
-    cor(a::GMM)
+    cor(G::GMM)
 
 Compute the correlation matrix of optimized parameter vector `θ`. See documentation of type `GMM` for notation. 
 """
@@ -282,7 +282,7 @@ function stars(pval)
 end
 
 """
-    summary(a::GMM)
+    summary(G::GMM)
 
 Print summary of the GMM problem.
 """
@@ -342,9 +342,11 @@ end
 
 
 """
-    wald(a::GMM; R=I, r=0, subset)
+    wald(G::GMM; R=I, r=0, subset)
 
-Print result of the Wald test of the null `R θ[subset] = r`. If omitted, `subset` defaults to all parameters, `1:a.npar`. `R` default to the identity, and `r` defaults to a vector of zeros.
+Print result of the Wald test of the null `R θ[subset] = r`. See documentation of type `GMM` for notation. 
+
+If omitted, `subset` defaults to all parameters `1:G.npar`. `R` defaults to the identity, and `r` defaults to a vector of zeros.
 """
 function wald(o::GMM; R=nothing, r=nothing, subset=nothing)
 
