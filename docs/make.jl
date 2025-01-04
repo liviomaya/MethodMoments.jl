@@ -8,7 +8,7 @@ makedocs(
     pages=[
         "Home" => "index.md",
         "General GMM models" => "general_gmm.md",
-        # "Linear regressions" => "linear_regressions.md",
+        "Linear regressions" => "linear_regression.md",
         "API" => "api.md",
         "References" => "references.md"
     ],

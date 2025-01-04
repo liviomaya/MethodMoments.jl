@@ -116,8 +116,12 @@ function check_and_promote_weight(W, nmom)
     return weight
 end
 
-function promote_to_matrix(vec_or_mat::VecOrMat)
-    return vec_or_mat isa AbstractVector ? reshape(vec_or_mat, :, 1) : vec_or_mat
+function promote_to_matrix(vec_or_mat::AbstractVecOrMat)
+    if vec_or_mat isa AbstractMatrix
+        return Matrix{Float64}(vec_or_mat)
+    elseif vec_or_mat isa AbstractVector
+        return reshape(Vector{Float64}(vec_or_mat), :, 1)
+    end
 end
 
 # TODO: check hac_cov against R
