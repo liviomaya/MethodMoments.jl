@@ -19,6 +19,7 @@ Pages = ["api.md"]
 
 ```@docs
 GMM
+Regression
 ```
 
 ### Functions
@@ -38,4 +39,15 @@ cor
 momcov
 summary
 wald
+reg
+coef
+intercept
+fit
+er
+er_var
+er_std
+r2
+llh
+aic
+bic
 ```

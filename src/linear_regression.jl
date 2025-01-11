@@ -362,7 +362,7 @@ function summary(o::Regression)
 end
 
 """
-    wald(R::Regression; R=I, r=0, subset)
+    wald(re::Regression; R=I, r=0, subset)
 
 Print result of the Wald test of the null `R β[subset] = r`, where `β` excludes the intercept. See documentation of type `Regression` for notation.
 

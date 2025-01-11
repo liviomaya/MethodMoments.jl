@@ -425,7 +425,7 @@ uuid = "c8ffd9c3-330d-5841-b78e-0817d7145fa1"
 version = "2.28.6+0"
 
 [[deps.MethodMoments]]
-deps = ["DataFrames", "Distributions", "LinearAlgebra", "Optim", "PrettyTables", "Statistics"]
+deps = ["DataFrames", "Distributions", "LinearAlgebra", "Optim", "PrettyTables", "Statistics", "StatsBase"]
 path = "C:\\Users\\livio\\OneDrive\\Documents\\My Work\\Codes\\Julia\\MethodMoments"
 uuid = "8302fc37-314b-4f55-a657-b0e8fb55c2c3"
 version = "0.1.0"
