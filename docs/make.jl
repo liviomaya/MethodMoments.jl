@@ -3,7 +3,7 @@ using MethodMoments
 
 makedocs(
     sitename="MethodMoments.jl",
-    build="site",
+    # build="build",
     modules=[MethodMoments],
     format=Documenter.HTML(),
     pages=[
@@ -14,12 +14,12 @@ makedocs(
         "References" => "references.md"
     ],
     authors="Livio Maya",
-    clean=true,
+    # clean=true,
     source="src/",
 )
 
 deploydocs(
     repo="github.com/liviomaya/MethodMoments.jl.git",
-    target="site",
+    # target="build",
     branch="gh-pages"
 )
