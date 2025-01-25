@@ -3,7 +3,7 @@ using MethodMoments
 
 makedocs(
     sitename="MethodMoments.jl",
-    build_directory="site",
+    build="site",
     modules=[MethodMoments],
     format=Documenter.HTML(),
     pages=[
