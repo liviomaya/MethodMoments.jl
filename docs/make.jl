@@ -16,3 +16,9 @@ makedocs(
     clean=true,
     source="src/",
 )
+
+deploydocs(
+    repo="github.com/liviomaya/MethodMoments.jl.git",
+    target="site",
+    branch="gh-pages"
+)
