@@ -1,3 +1,5 @@
 [deps]
+Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
 Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
 MethodMoments = "8302fc37-314b-4f55-a657-b0e8fb55c2c3"
+Optim = "429524aa-4258-5aef-a3af-852621145aeb"
